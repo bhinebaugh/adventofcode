@@ -1,6 +1,13 @@
-import { program } from "./day2-input.json"
+import { program } from "./day5-input.json"
+document.getElementById("input").innerText = program.join(", ")
+var output = compute(program)
+document.getElementById("output").innerText = output.join(", ")
 
 let operate = (v,a,b) => {
+	opcode = v.slice(2) //last two digits ()
+	if (v.length > 2) {
+		params = v.padStart(3,'0')
+	}
 	switch (v) {
 		case 1:
 			return a+b;
@@ -17,33 +24,23 @@ let operate = (v,a,b) => {
 	}
 }
 
-let compute = (program) => {
+let compute = (program, input) => {
 	let pointer = 0
 	let endpoint = program.length
-	while(pointer < endpoint) {
-		let segment = program.slice(step,step+4)
-		if (segment[0] == 99) { return program }
-		var result = operate(
-			segment[0],
-			program[segment[1]],
-			program[segment[2]]
-		)
-		program[segment[3]] = result
-		// step = step+4
-	}
+
+	//start at pointer
+	//read number of entries indicated by opcode
+	// program[pointer].toString().length >= 2
+	let instruction = program[pointer]
+	let opcode = instruction.toString().slice(-2) // last two digits
+	let p = instruction.slice(0,-2).padStart(3,'0')
+
+
 	console.log("remaining",program.slice(step,program.length))
 	return program
 }
 
-// adjust memory to pre-crash state
-const unalteredState = [...program]
-program[1] = 12
-program[2] = 2
-document.getElementById("input").innerText = program.join(", ")
-var output = compute(program)
-document.getElementById("output").innerText = output.join(", ")
 
-const targetOutput = 19690720
 
 noun_block: {
 	for (let noun=0; noun <= 99; noun++) {

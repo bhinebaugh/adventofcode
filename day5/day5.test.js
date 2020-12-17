@@ -9,7 +9,7 @@ const opcodes = [1,2,3,4,99]
 test("errors on unknown opcode", (t) => {
 	var x = operate(3,5,5);
 	t.notok(x);
-	t.end();	
+	t.end();
 })
 
 test("opcode '1' adds numbers", (t) => {
@@ -29,6 +29,23 @@ test("opcode '3' saves an input to position specified by parameter", t => {
 test("opcode '4' outputs the value at its parameter's position", t => {
 	var program = [4,2,88]
 	t.equal( compute(program) )
+})
+
+test("The program 3,0,4,0,99 outputs whatever it gets as input, then halts.", t => {
+	var program = [3,0,4,0,99]
+
+})
+
+test("the program 1002,4,3,4,33 produces 99", t => {
+	
+})
+
+test("supports parameter mode '0' --> position mode", t => {
+	var program = ["001", "3",]
+})
+
+test("supports parameter mode '1' --> immediate mode", t => {
+
 })
 
 test("simple addition program", (t) => {
