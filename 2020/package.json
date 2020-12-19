@@ -1,0 +1,23 @@
+{
+  "name": "advent-of-code-2020",
+  "version": "0.0.1",
+  "description": "solutions to https://adventofcode.com/ in JavaScript",
+  "main": "index.js",
+  "scripts": {
+    "test": "tape **/*.test.js | faucet"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bhinebaugh/adventofcode.git"
+  },
+  "author": "B.K. Hinebaugh",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/bhinebaugh/adventofcode/issues"
+  },
+  "homepage": "https://github.com/bhinebaugh/adventofcode#readme",
+  "devDependencies": {
+    "faucet": "0.0.1",
+    "tape": "^5.0.1"
+  }
+}
