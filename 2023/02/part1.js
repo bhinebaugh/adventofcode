@@ -1,39 +1,50 @@
+fs = require("fs")
 
-stringinput = 
-`Game 1: 3 blue, 4 red; 1 red, 2 green, 6 blue; 2 green
-Game 2: 1 blue, 2 green; 3 green, 4 blue, 1 red; 1 green, 1 blue
-Game 3: 8 green, 6 blue, 20 red; 5 blue, 4 red, 13 green; 5 green, 1 red
-Game 4: 1 green, 3 red, 6 blue; 3 green, 6 red; 3 green, 15 blue, 14 red
-Game 5: 6 red, 1 blue, 3 green; 2 blue, 1 red, 2 green`
+const rActual = 12; const gActual = 13; const bActual = 14;
+const colorCountRegex = /\W*(\d+) (red|green|blue)\W*/
+var lines = new Array()
 
-sample = [
-    "3 blue, 4 red; 1 red, 2 green, 6 blue; 2 green",
-    "1 blue, 2 green; 3 green, 4 blue, 1 red; 1 green, 1 blue",
-    "8 green, 6 blue, 20 red; 5 blue, 4 red, 13 green; 5 green, 1 red",
-    "1 green, 3 red, 6 blue; 3 green, 6 red; 3 green, 15 blue, 14 red",
-    "6 red, 1 blue, 3 green; 2 blue, 1 red, 2 green",
-]
+// process input file into data structures expected below
+fs.readFile("./input.txt", "utf8", (err, data) => {
+    if (err) { throw new Error(err) }
+    lines = data.split("\n")
+    lines = lines.map(line => line.split(":")[1])
+    processInput(lines)
+})
 
-const colorRegex = /\W*(\d+) (red|green|blue)\W*/
-
-// loop over game strings (lines)
-i = 1
-for (gameString of sample) {
-    maxOfGame = { red: 0, green: 0, blue: 0 }
-    const game = gameString.split(";")
-    // loop over grabs comprising the game
-    for (const hand of game) {
-        colorCountsOfHand = hand.split(",")
-        for (colorCount of colorCountsOfHand) {
-            [, countStr, color] = colorCount.match(colorRegex)
-            count = Number.parseInt(countStr)
-            if (typeof maxOfGame[color] === "undefined") {
-                console.log(`color ${color} not found in record`)
-            } else {
-                if (count > maxOfGame[color]) maxOfGame[color] = count
+function processInput(gamesArray) {
+    // loop over an array of games as strings 
+    // (lines of input file minus game id)
+    i = 1; idSum = 0;
+    for (gameString of gamesArray) {
+        gameMax = { red: 0, green: 0, blue: 0 }
+        const game = gameString.split(";")
+        // loop over grabs comprising the game
+        for (const hand of game) {
+            colorCountsOfHand = hand.split(",")
+            for (colorCount of colorCountsOfHand) {
+                [, countStr, color] = colorCount.match(colorCountRegex)
+                count = Number.parseInt(countStr)
+                if (typeof gameMax[color] === "undefined") {
+                    console.log(`color ${color} not found in record`)
+                } else {
+                    if (count > gameMax[color]) gameMax[color] = count
+                }
             }
         }
+        if (resultsArePossible(gameMax)) {
+            idSum = idSum + i
+        }
+        i++
     }
-    console.log(i, ": ", maxOfGame)
-    i++
+    console.log("sum of IDs of all possible games:", idSum)
+}
+
+function resultsArePossible(gameMax) {
+    if (
+        gameMax.red   <= rActual && 
+        gameMax.green <= gActual && 
+        gameMax.blue  <= bActual
+    ) { return true }
+    else { return false }
 }
