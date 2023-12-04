@@ -19,7 +19,8 @@ func main() {
 	var acc []int
 
 	for i := 0; i < len(lines); i++ {
-		firstNumber := findFirstNumber(lines[i])
+		findFirstAndLastNumber(lines[i])
+		// firstNumber := findFirstNumber(lines[i])
 		// lastNumber := findLastNumber(lines[i])
 		// var fullNumberStr string
 		// fullNumberStr = firstNumber + lastNumber
@@ -29,7 +30,7 @@ func main() {
 		// } else {
 		// 	acc = append(acc, finalNumber)
 		// }
-		fmt.Println(lines[i], "--->", firstNumber) //, "and", lastNumber, "===>", fullNumberStr, "=", finalNumber)
+		// fmt.Println(lines[i], "--->", firstNumber) //, "and", lastNumber, "===>", fullNumberStr, "=", finalNumber)
 	}
 	fmt.Println(strings.Repeat("-", 80))
 	total := 0
@@ -39,24 +40,38 @@ func main() {
 	fmt.Println(total)
 }
 
-func findFirstNumber(line string) int {
+func findFirstAndLastNumber(line string) int {
 	singleDigitRegex, err := regexp.Compile("one|two|three|four|five|six|seven|eight|nine|[0-9]")
 	if err != nil {
 		fmt.Println("regex failed")
 		return 0
 	}
 
-	digitString := singleDigitRegex.FindString(line)
+	// note: won't capture overlapping strings
+	// which e.g. captures "two" in "bmcgjkkkhfive5twonekc"
+	// instead of "one"
+	digitStrings := singleDigitRegex.FindAllString(line, -1)
 
-	if len(digitString) == 0 {
+	if len(digitStrings) == 0 {
 		fmt.Println("no number found")
 		return 0
 	}
+	firstStr := digitStrings[0]
+	lastStr := digitStrings[len(digitStrings)-1]
+	first := convertToInt(firstStr)
+	last := convertToInt(lastStr)
+	// fmt.Println(digitStrings, "==>", firstStr+lastStr, "=", first, last, "=", first*10+last)
+	fmt.Println(line, "==>", first*10+last)
+	// capture first and last in list
+	return 0
+}
+
+func convertToInt(digitString string) int {
 	if len(digitString) == 1 {
 		digitInt, err := strconv.Atoi(digitString)
 		if err != nil {
 			return 0
-			fmt.Println("couldn't convert to int")
+			// fmt.Println("couldn't convert to int")
 		} else {
 			return digitInt
 		}
@@ -64,11 +79,12 @@ func findFirstNumber(line string) int {
 	// if len(digitString) == 0 {}
 	nums := []string{"zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine"}
 	// return 1 + nums.Index(digitString)
-	for _, n := range nums {
+	for i, n := range nums {
 		if n == digitString {
-			return _
+			return i
 		}
 	}
+	return 0
 }
 
 func findLastNumber(line string) string {
